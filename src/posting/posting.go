@@ -1,3 +1,9 @@
+/*
+Package posting handles adding and removing documents from superfastmatch,
+with all the indexing and hash-management that entails.
+
+*/
+
 package posting
 
 import (
