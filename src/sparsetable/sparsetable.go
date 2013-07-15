@@ -1,3 +1,10 @@
+/*
+package sparsetable implements a memory-efficient store mapping
+uint64 ids to byte strings.
+
+Groups consecutive indexes together to avoid key-per-value.
+
+*/
 package sparsetable
 
 import (
@@ -17,6 +24,7 @@ func SumUint8(x []uint8) uint64 {
 	return sum
 }
 
+// FastSumUint8 is a hand-rolled amd64 asm version of SumUint8
 func FastSumUint8(x []uint8) uint64
 
 const MAX_SIZE = 255
@@ -74,6 +82,7 @@ func (s *SparseTable) SetBytes(pos uint64, b []byte) error {
 	return s.Set(pos, r, len(b))
 }
 
+//
 func (s *SparseTable) Set(pos uint64, r io.Reader, length int) error {
 	if pos > uint64(len(s.lengths)) {
 		return &Error{pos: pos, OutOfBounds: true}

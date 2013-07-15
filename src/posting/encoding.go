@@ -1,5 +1,7 @@
 package posting
 
+// here be monsters.
+
 import (
 	"bytes"
 	"container/list"
@@ -13,6 +15,7 @@ const maxDeltas = 255
 const maxSize = 255
 const sizeOfZero = 1
 
+//
 type Header struct {
 	Doctype  uint32
 	existing []byte

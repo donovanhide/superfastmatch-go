@@ -10,6 +10,7 @@ import (
 
 var decoder = schema.NewDecoder()
 
+// Client provides an endpoint for talking to a number of posting servers.
 type Client struct {
 	clients  []*rpc.Client
 	registry *registry.Registry
@@ -75,6 +76,7 @@ func (p *Client) Close() {
 	}
 }
 
+// returns one searchmap for each client (merge step is separate)
 func (p *Client) Search(d *document.DocumentArg) (*document.SearchGroup, error) {
 	result := make(document.SearchGroup, len(p.clients))
 	done := make(chan *rpc.Call, len(p.clients))
@@ -87,10 +89,12 @@ func (p *Client) Search(d *document.DocumentArg) (*document.SearchGroup, error) 
 			return nil, replyCall.Error
 		}
 	}
+
 	return &result, nil
 }
 
 // Don't care about the replies, just check the error
+// ie add/delete docs
 func (p *Client) CallMultiple(service string, args interface{}) error {
 	done := make(chan *rpc.Call, len(p.clients))
 	for i, _ := range p.clients {
@@ -105,6 +109,7 @@ func (p *Client) CallMultiple(service string, args interface{}) error {
 	return nil
 }
 
+// page through the index... (for debugging)
 func (p *Client) GetRows(values *url.Values) (*ListResult, error) {
 	result := Query{
 		Start: 0,

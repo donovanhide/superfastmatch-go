@@ -2,6 +2,13 @@
 Package posting handles adding and removing documents from superfastmatch,
 with all the indexing and hash-management that entails.
 
+An SFM system can have multiple Posting servers - the storage will be
+partitioned across them all.
+
+Upon startup, posting will scan through the documents in the mongodb store,
+and calculate hashes for them, storing the results in ram for
+quick lookup (using sparsetable).
+
 */
 
 package posting

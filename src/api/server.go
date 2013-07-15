@@ -29,16 +29,27 @@ var routes = []struct {
 	fn      appHandler
 	methods ss
 }{
+	// page though all docs (meta data only)
 	{"/document/", nil, documentsHandler, ss{"GET", "DELETE"}},
+	// fill in some random test data
 	{"/document/test/", nil, testHandler, ss{"POST"}},
+	// page through matching doctypes (metadata)
 	{"/document/{doctypes:%s}/", is{rangeRegex}, documentsHandler, ss{"GET", "DELETE"}},
+	// individual doc access - meta+text+associations
 	{"/document/{doctype:%s}/{docid:%s}/", is{docRegex, docRegex}, documentHandler, ss{"GET", "POST", "DELETE"}},
+	// browse assocations
 	{"/association/", nil, associationHandler, ss{"GET", "POST", "DELETE"}},
+	// source is doctype query (eg show me all press releases from the bbc)
 	{"/association/{source:%s}/", is{rangeRegex}, associationHandler, ss{"GET", "POST", "DELETE"}},
+	// eg "show me alll press releases from the bbc which match articles in the independent."
 	{"/association/{source:%s}/{target:%s}/", is{rangeRegex, rangeRegex}, associationHandler, ss{"GET", "POST", "DELETE"}},
+	// queue monitoring
 	{"/queue/", nil, queueHandler, ss{"GET"}},
+	// view individual queue item
 	{"/queue/{id:%s}/", is{queueRegex}, queueItemHandler, ss{"GET"}},
+	// page through hash index
 	{"/index/", nil, indexHandler, ss{"GET"}},
+	// search the index, return similar docs
 	{"/search/", nil, searchHandler, ss{"POST"}},
 }
 
@@ -110,6 +121,7 @@ func associationHandler(rw http.ResponseWriter, req *http.Request) *appError {
 	case "GET":
 		fmt.Println(mux.Vars(req))
 		association := &document.Association{}
+		// TODO
 		return writeJson(rw, req, association, 200)
 	case "DELETE":
 		return nil

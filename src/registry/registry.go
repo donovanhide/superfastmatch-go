@@ -1,5 +1,6 @@
 /*
-Package registry ties together all the components of superfastmatch.
+Package registry ties together and configures all the components
+of superfastmatch.
 
 SFM stores documents in a mongodb collection, and maintains a set of
 hashes to enable speedy comparisons based upon content.
@@ -32,6 +33,12 @@ It can also be used as a client to perform:
   associate - find associations between documents
   switch - ?
   search -
+
+
+Singleton which controls all the settings for SFM.
+In-memory index
+async ops queue: add doc, delete doc, association
+
 
 
 */
