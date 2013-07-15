@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+// multipurpose args
+// text always
+// doctypes
+
 type DocumentArg struct {
 	Id          *DocumentID
 	TargetRange string

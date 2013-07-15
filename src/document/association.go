@@ -15,7 +15,11 @@ type Inverted struct {
 type InvertedSlice []Inverted
 
 type Association struct {
+	// TODO: does Association embed a full document, or one with just a
+	// few fields filled out? (eg presumably Document doesn't include
+	// it's own Associations field recursively...)
 	Document
+	// The parts of the document text which match
 	Fragments     FragmentSlice `json:"fragments"`
 	FragmentCount int           `json:"fragment_count"`
 }

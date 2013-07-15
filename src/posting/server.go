@@ -7,6 +7,7 @@ import (
 	"registry"
 )
 
+// serve starts a posting server running on the given Listener.
 func serve(registry *registry.Registry, l *net.Listener) {
 	log.Println("Starting Posting Server on:", (*l).Addr().String())
 	p := newPosting(registry, (*l).Addr().String())
@@ -24,6 +25,7 @@ func serve(registry *registry.Registry, l *net.Listener) {
 	registry.Routines.Done()
 }
 
+// Serve starts up some number of posting servers.
 func Serve(registry *registry.Registry) {
 	for i, _ := range registry.PostingListeners {
 		go serve(registry, &registry.PostingListeners[i])

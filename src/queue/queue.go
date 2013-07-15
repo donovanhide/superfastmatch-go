@@ -1,3 +1,11 @@
+/*
+Package queue implements a queue of commands for superfastmatch.
+The queued items are stored in the mongodb database, in the 'queue'
+collection.
+Items can be operations such as adding/deleting documents and creating
+document associations (see command.go for the list).
+Upon completion, items are left in the queue, but marked as completed.
+*/
 package queue
 
 import (
@@ -133,6 +141,8 @@ func (q *QueueItem) String() string {
 	return buf.String()
 }
 
+// Start runs the queue, processing any items already in the queue and
+// handling new ones as they come in.
 func Start(registry *registry.Registry) {
 	log.Println("Starting Queue Processor")
 	registry.Queue = make(chan bool)

@@ -1,3 +1,47 @@
+/*
+Package registry ties together and configures all the components
+of superfastmatch.
+
+SFM stores documents in a mongodb collection, and maintains a set of
+hashes to enable speedy comparisons based upon content.
+
+Interaction with SFM is via an HTTP API, or commandline client.
+
+There is a work queue maintained (and also stored in mongodb) to handle
+load regulation.
+
+
+The other packages that form superfastmatch are:
+
+posting - handles adding/removing documents and hashing
+sparsetable - structure for storing document hashes (exclusively in RAM?)
+query - performs searches
+queue - buffers up items of work
+api - implements the HTTP API. Adds work items to the queue for processing.
+document - defines the document model and algorithms for hashing.
+
+
+The registry can be configured to run as a server in the following modes:
+  api - accept api calls over http
+  posting - accept and index new documents (always fedd by the queue?)
+  queue - run a server to process the work queue
+  standalone - runs all of them: api, queue and posting
+
+It can also be used as a client to perform:
+  add - add a document
+  delete - delete a document
+  associate - find associations between documents
+  switch - ?
+  search -
+
+
+Singleton which controls all the settings for SFM.
+In-memory index
+async ops queue: add doc, delete doc, association
+
+
+
+*/
 package registry
 
 import (
@@ -95,6 +139,7 @@ func parseMode(args []string) (string, []string) {
 	return "standalone", args[1:]
 }
 
+// Open sets up the registry, in whatever configuration it was created with
 func (r *Registry) Open() {
 	var err error
 	r.HashWidth = uint64(r.flags.HashWidth)
@@ -152,6 +197,7 @@ func (r *Registry) Close() {
 	r.session.Close()
 }
 
+// NewRegistry creates a new registry and parses args to set up it's configuration details.
 func NewRegistry(args []string) *Registry {
 	r := new(Registry)
 	r.Mode, args = parseMode(args)

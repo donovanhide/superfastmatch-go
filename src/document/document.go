@@ -1,3 +1,4 @@
+// package document provides the object model for SFM documents.
 package document
 
 import (
@@ -13,6 +14,8 @@ import (
 	"unicode/utf8"
 )
 
+// MetaMap type holds metadata for documents - so client applications can
+// attach whatever gubbins they need.
 type MetaMap map[string]interface{}
 
 type HashKey struct {
@@ -25,18 +28,31 @@ type BloomKey struct {
 	Size uint64
 }
 
+// DocumentID identifies an individual document.
 type DocumentID struct {
+	// Doctype is the general class of document. The exact usage is left
+	// up to client application. It's used to restrict searches to a subset
+	// of documents (eg compare this "essay"-type document against all the
+	// "wikipedia entry"-type documents.)
 	Doctype uint32 `json:"doctype"`
 	Docid   uint32 `json:"docid"`
 }
 
+// Document is the representation of a document stored in an SFM store
+// The fields required by SFM (Title,Text) are members here, but most
+// docs would also have a bunch of other fields, saved as metadata.
+// Documents can also hold Associations to other documents - ie similar,
+// matching documents. When creating an association between two docs,
+// it should be added to _both_ documents.
 type Document struct {
-	Id             DocumentID    `json:"id" bson:"_id"`
-	Title          string        `json:"title"`
-	Text           string        `json:"text,omitempty"`
-	Length         uint64        `json:"characters"`
-	Valid          bool          `json:"valid"`
-	Meta           MetaMap       `json:"metaData,omitempty"`
+	Id     DocumentID `json:"id" bson:"_id"`
+	Title  string     `json:"title"`
+	Text   string     `json:"text,omitempty"`
+	Length uint64     `json:"characters"`
+	Valid  bool       `json:"valid"`
+	// Extra fields are stashed here
+	Meta MetaMap `json:"metaData,omitempty"`
+	// Which documents are associated with (ie match) this one?
 	Associations   *Associations `json:"associations,omitempty"`
 	hashes         map[HashKey][]uint64
 	blooms         map[BloomKey]Bloom
